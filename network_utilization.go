@@ -7,17 +7,17 @@ import (
 	"strings"
 )
 
-type NetworkUtilization map[string]*DeviceNetworkUtilization
+type NetworkUtilization map[string]DeviceNetworkUtilization
 
 type DeviceNetworkUtilization struct {
-	rxBytes          int64
-	rxPackets        int64
-	rxErrors         int64
-	rxDroppedPackets int64
-	txBytes          int64
-	txPackets        int64
-	txErrors         int64
-	txDroppedPackets int64
+	RxBytes          int64
+	RxPackets        int64
+	RxErrors         int64
+	RxDroppedPackets int64
+	TxBytes          int64
+	TxPackets        int64
+	TxErrors         int64
+	TxDroppedPackets int64
 }
 
 func (self *NetworkUtilization) Get() error {
@@ -40,29 +40,29 @@ func (self *NetworkUtilization) Get() error {
 			return fmt.Errorf("/proc/net/dev doesn't have the expected format. Expected 16 fields found %d", len(fields))
 		}
 		name := strings.Trim(fields[0], ":")
-		utilization := &DeviceNetworkUtilization{}
-		if utilization.rxBytes, err = strconv.ParseInt(fields[1], 10, 64); err != nil {
+		utilization := DeviceNetworkUtilization{}
+		if utilization.RxBytes, err = strconv.ParseInt(fields[1], 10, 64); err != nil {
 			return err
 		}
-		if utilization.rxPackets, err = strconv.ParseInt(fields[2], 10, 64); err != nil {
+		if utilization.RxPackets, err = strconv.ParseInt(fields[2], 10, 64); err != nil {
 			return err
 		}
-		if utilization.rxErrors, err = strconv.ParseInt(fields[3], 10, 64); err != nil {
+		if utilization.RxErrors, err = strconv.ParseInt(fields[3], 10, 64); err != nil {
 			return err
 		}
-		if utilization.rxDroppedPackets, err = strconv.ParseInt(fields[4], 10, 64); err != nil {
+		if utilization.RxDroppedPackets, err = strconv.ParseInt(fields[4], 10, 64); err != nil {
 			return err
 		}
-		if utilization.txBytes, err = strconv.ParseInt(fields[9], 10, 64); err != nil {
+		if utilization.TxBytes, err = strconv.ParseInt(fields[9], 10, 64); err != nil {
 			return err
 		}
-		if utilization.txPackets, err = strconv.ParseInt(fields[10], 10, 64); err != nil {
+		if utilization.TxPackets, err = strconv.ParseInt(fields[10], 10, 64); err != nil {
 			return err
 		}
-		if utilization.txErrors, err = strconv.ParseInt(fields[11], 10, 64); err != nil {
+		if utilization.TxErrors, err = strconv.ParseInt(fields[11], 10, 64); err != nil {
 			return err
 		}
-		if utilization.txDroppedPackets, err = strconv.ParseInt(fields[12], 10, 64); err != nil {
+		if utilization.TxDroppedPackets, err = strconv.ParseInt(fields[12], 10, 64); err != nil {
 			return err
 		}
 		(*self)[name] = utilization
