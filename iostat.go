@@ -5,8 +5,8 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"os"
 	"io/ioutil"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -28,18 +28,18 @@ type DiskStats struct {
 	MsecWeightedTotal uint64 // Measure of recent I/O completion time and backlog.
 }
 
-func ListDiskStats() ([]*DiskStats, error) {
-	proc_diskstats := "/proc/diskstats"
-	if _, err := os.Stat(proc_diskstats); err != nil {	
-		return nil, fmt.Errorf("%s not exists", proc_diskstats)
+func GetDiskStats() ([]DiskStats, error) {
+	procDiskStats := "/proc/diskstats"
+	if _, err := os.Stat(procDiskStats); err != nil {
+		return nil, fmt.Errorf("%s not exists", procDiskStats)
 	}
 
-	contents, err := ioutil.ReadFile(proc_diskstats)
+	contents, err := ioutil.ReadFile(procDiskStats)
 	if err != nil {
 		return nil, err
 	}
 
-	ret := make([]*DiskStats, 0)
+	var ret []DiskStats
 
 	reader := bufio.NewReader(bytes.NewBuffer(contents))
 	for {
@@ -64,7 +64,7 @@ func ListDiskStats() ([]*DiskStats, error) {
 			continue
 		}
 
-		item := &DiskStats{}
+		item := DiskStats{}
 		for i := 0; i < size; i++ {
 			if item.Major, err = strconv.Atoi(fields[0]); err != nil {
 				return nil, err
